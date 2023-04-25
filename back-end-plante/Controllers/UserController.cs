@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using back_end_plante.Models;
 using back_end_plante.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -25,35 +24,31 @@ public class UserController : ControllerBase
     [HttpGet("login")]
     public IActionResult Login([FromQuery] string email, [FromQuery] string password)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, "le nom du toto"),
-            new("userId", "id du toto"),
-            new("userName", "le nom du toto")
-        };
-        var token = GetToken(claims);
-
+        var token = GenerateToken("tom");
         return Ok(new
         {
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = token.ValidTo
         });
     }
-
-    private JwtSecurityToken GetToken(List<Claim> authClaims)
+    
+    private JwtSecurityToken GenerateToken(string mail)
     {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:ValidIssuer"],
-            audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddHours(24),
-            claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.Sha256)
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier,mail),
+        };
+        var token = new JwtSecurityToken
+        (
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: DateTime.Now.AddMinutes(15),
+            signingCredentials: credentials
         );
+        
         return token;
     }
 }
