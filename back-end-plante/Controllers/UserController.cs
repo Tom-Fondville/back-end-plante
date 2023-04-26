@@ -40,7 +40,7 @@ public class UserController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier,mail),
         };
-        var token = new JwtSecurityToken
+        return new JwtSecurityToken
         (
             _configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],
@@ -48,7 +48,5 @@ public class UserController : ControllerBase
             expires: DateTime.Now.AddMinutes(15),
             signingCredentials: credentials
         );
-        
-        return token;
     }
 }
