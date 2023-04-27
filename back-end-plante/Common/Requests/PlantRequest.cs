@@ -1,13 +1,11 @@
+﻿using back_end_plante.Common.Models;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace back_end_plante.Common.Models;
+namespace back_end_plante.Common.Requests;
 
-public class Plant
+public class PlantRequest
 {
-    [BsonId]
-    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-    public string Id { get; set; }
-    
+
     [BsonElement("name")]
     public string Name { get; set; }
     
@@ -20,4 +18,21 @@ public class Plant
     
     [BsonElement("pictures")]
     public Picture pictures { get; set; }
+
+
+
+    public Plant toPlant()
+    {
+        Plant plant = new Plant();
+
+        plant.Name = this.Name;
+        plant.UserId = this.UserId;
+        plant.Advice = this.Advice;
+        plant.pictures = this.pictures;
+
+        return plant;
+
+    }
+
+
 }
