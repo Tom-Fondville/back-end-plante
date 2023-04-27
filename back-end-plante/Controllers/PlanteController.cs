@@ -19,7 +19,7 @@ public class PlanteController
         _planteRepository = planteRepository;
     }
     
-    [AllowAnonymous]
+    [Authorize]
     [HttpGet("All")]
     public Task<List<Plant>> Get()
     {
@@ -27,14 +27,14 @@ public class PlanteController
     }
     
     
-    [AllowAnonymous]
+    [Authorize]
     [HttpGet("{id}")]
     public Task<Plant> GetPlantById([FromRoute] string id)
     {
         return _planteRepository.GetPlantById(id);
     }
     
-    [AllowAnonymous]
+    [Authorize]
     [HttpGet("user/{userId}")]
     public Task<List<Plant>> GetPlantsByUserId([FromRoute] string userId)
     {
@@ -42,7 +42,7 @@ public class PlanteController
     }
     
     
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost("addPlant")]
     public Task<Plant> AddPlant([FromBody] PlantRequest plantRequest)
     {
@@ -50,14 +50,14 @@ public class PlanteController
         
     }
     
-    [AllowAnonymous]
+    [Authorize]
     [HttpPut("modifyPlant")]
     public Task<Plant> ModifyPlant([FromBody] Plant plant)
     {
         return _planteRepository.ModifyPlant(plant);
     }
 
-    [AllowAnonymous]
+    [Authorize]
     [HttpDelete("deletePlant/{id}")]
     public Task<bool> DeletePlant([FromRoute] string id)
     {
