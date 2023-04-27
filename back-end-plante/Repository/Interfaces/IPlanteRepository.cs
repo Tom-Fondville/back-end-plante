@@ -5,4 +5,16 @@ namespace back_end_plante.Repository.Interfaces;
 public interface IPlanteRepository
 {
     Task<List<Plant>> GetPlantsAsync();
+
+    Task<Plant> GetPlantById(string id);
+    
+    Task<List<Plant>> GetPlantsByUserId(string id);
+
+
+    Task<Plant> AddPlant(Plant newPlant);
+
+    Task<Plant> ModifyPlant(Plant newPlant);
+
+    Task<bool> DeletePlant(string id);
+
 }
