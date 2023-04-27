@@ -1,4 +1,4 @@
-namespace back_end_plante.Models;
+namespace back_end_plante.Common.Models;
 
 public class Utilisateur
 {

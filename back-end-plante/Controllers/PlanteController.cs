@@ -1,4 +1,4 @@
-using back_end_plante.Models;
+using back_end_plante.Common.Models;
 using back_end_plante.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +19,9 @@ public class PlanteController
     
     [AllowAnonymous]
     [HttpGet("All")]
-    public Task<List<Plante>> Get()
+    public Task<List<Plant>> Get()
     {
-        return _planteRepository.GetPlantesAsync();
+        return _planteRepository.GetPlantsAsync();
     }
 
 }

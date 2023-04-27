@@ -1,8 +1,8 @@
-using back_end_plante.Models;
+using back_end_plante.Common.Models;
 
 namespace back_end_plante.Repository.Interfaces;
 
 public interface IPlanteRepository
 {
-    Task<List<Plante>> GetPlantesAsync();
+    Task<List<Plant>> GetPlantsAsync();
 }

@@ -1,5 +1,5 @@
+using back_end_plante.Common.Models;
 using back_end_plante.Configurations;
-using back_end_plante.Models;
 using back_end_plante.Repository.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -8,14 +8,14 @@ namespace back_end_plante.Repository;
 
 public class PlanteRepositry : MsprPlanteRepositoryBase, IPlanteRepository
 {
-    private readonly IMongoCollection<Plante> _planteCollection;
+    private readonly IMongoCollection<Plant> _plantCollection;
     
     public PlanteRepositry(IOptions<ConnectionStringConfiguration> connectionStringConfiguration) : base(connectionStringConfiguration)
     {
         try
         {
             var db = GetClient().WithReadPreference(ReadPreference.Secondary).GetDatabase(MongoPocProviderName);
-            _planteCollection = db.GetCollection<Plante>("Plante");
+            _plantCollection = db.GetCollection<Plant>("Plant");
         }
         catch (Exception e)
         {
@@ -24,12 +24,12 @@ public class PlanteRepositry : MsprPlanteRepositoryBase, IPlanteRepository
         }
     }
 
-    public async Task<List<Plante>> GetPlantesAsync()
+    public async Task<List<Plant>> GetPlantsAsync()
     {
-        var builder = Builders<Plante>.Filter;
+        var builder = Builders<Plant>.Filter;
         var filter = builder.Empty;
         
-        var result = await _planteCollection.FindAsync(filter);
+        var result = await _plantCollection.FindAsync(filter);
 
         return result.ToList();
     }
