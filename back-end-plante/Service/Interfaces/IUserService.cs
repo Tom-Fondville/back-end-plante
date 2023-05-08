@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using back_end_plante.Common.Models;
-using back_end_plante.Common.Request;
+using back_end_plante.Common.Requests;
+using back_end_plante.Common.Requests.user;
 
 namespace back_end_plante.Service.Interfaces;
 

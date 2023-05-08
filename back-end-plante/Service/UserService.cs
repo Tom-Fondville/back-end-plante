@@ -3,9 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using back_end_plante.Common.Extensions;
 using back_end_plante.Common.Models;
-using back_end_plante.Common.Request;
+using back_end_plante.Common.Requests;
+using back_end_plante.Common.Requests.user;
 using back_end_plante.Repository.Interfaces;
 using back_end_plante.Service.Interfaces;
+using back_end_plante.Utils;
 using Microsoft.IdentityModel.Tokens;
 
 namespace back_end_plante.Service;
@@ -22,14 +24,14 @@ public class UserService : IUserService
 
     public async Task<JwtSecurityToken> Login(string email, string password)
     {
-        var user = await _userRepository.GetUserByMailAndPassword(email, password);
+        var user = await _userRepository.GetUserByMailAndPassword(email, Hasher.Hash(password));
         return GenerateToken(user);
 
     }
     
     public Task Register(UserRequest userRequest)
     {
-        if (!userRequest.Ivalid()) throw new BadHttpRequestException("UserRequest not valid");
+        if (!userRequest.IsValid()) throw new BadHttpRequestException("UserRequest not valid");
         return _userRepository.Register(userRequest.ToUser());
     }
 
@@ -40,7 +42,7 @@ public class UserService : IUserService
 
     public Task UpdateUser(string userId, UserRequest userRequest)
     {
-        if (!userRequest.Ivalid()) throw new BadHttpRequestException("UserRequest not valid");
+        if (!userRequest.IsValid()) throw new BadHttpRequestException("UserRequest not valid");
         return _userRepository.UpdateUser(userId ,userRequest.ToUser());
     }
 
@@ -64,7 +66,7 @@ public class UserService : IUserService
             _configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],
             claims,
-            expires: DateTime.Now.AddMinutes(15),
+            expires: DateTime.Now.AddHours(24),
             signingCredentials: credentials
         );
     }
