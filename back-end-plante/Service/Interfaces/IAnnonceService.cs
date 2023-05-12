@@ -9,4 +9,5 @@ public interface IAnnonceService
     Task CreateAnnonce(AnnonceRequest request);
     public Task AddPossibleGarden(string annonceId, string possibleGardenId);
     public Task DeleteAnnonce(string annonceId);
+    public Task ValidateGarden(string annonceId, string gardenId);
 }

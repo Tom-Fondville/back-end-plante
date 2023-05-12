@@ -52,4 +52,18 @@ public class AnnonceRepository : MsprPlanteRepositoryBase, IAnnonceRepository
 
         await _annonceCollection.DeleteOneAsync(filter);
     }
+
+    public async Task UpdateAnnonce(string annonceId, Annonce annonce)
+    {
+        var builder = Builders<Annonce>.Filter;
+
+        var filter = builder.Eq(a => a.Id, annonceId);
+
+        var result = await _annonceCollection.ReplaceOneAsync(filter, annonce);
+
+        if (result.ModifiedCount == 0)
+        {
+            throw new BadHttpRequestException($"Failed to update annonce with id {annonce.Id}");
+        }
+    }
 }

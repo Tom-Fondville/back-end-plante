@@ -50,7 +50,12 @@ public class UserService : IUserService
     {
         return _userRepository.DeleteUserById(id);
     }
-    
+
+    public Task AddAdresse(string userId, List<Adress> adresses)
+    {
+        return _userRepository.AddAdresse(userId, adresses);
+    }
+
     private JwtSecurityToken GenerateToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

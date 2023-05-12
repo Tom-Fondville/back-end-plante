@@ -2,7 +2,6 @@ using back_end_plante.Common.Models;
 using back_end_plante.Configurations;
 using back_end_plante.Repository.Interfaces;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace back_end_plante.Repository;
@@ -57,9 +56,18 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
 
         if (result.ModifiedCount == 0)
         {
-            throw new BadHttpRequestException($"Failed to update plant with id {user.Id}");
+            throw new BadHttpRequestException($"Failed to update user with id {user.Id}");
         }
     }
+
+    public async Task AddAdresse(string userId, List<Adress> adresses)
+    {
+        var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+        var updates = Builders<User>.Update.PushEach(u => u.Adresses, adresses);
+
+        await _userCollection.UpdateOneAsync(filter, updates);
+    }
+    
     public Task DeleteUserById(string id)
     {
         var filter = Builders<User>.Filter.Eq(u => u.Id, id);

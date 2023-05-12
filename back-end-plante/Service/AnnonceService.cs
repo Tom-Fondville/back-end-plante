@@ -1,3 +1,4 @@
+using back_end_plante.Common.Enums;
 using back_end_plante.Common.Models;
 using back_end_plante.Common.Requests;
 using back_end_plante.Repository.Interfaces;
@@ -32,6 +33,14 @@ public class AnnonceService : IAnnonceService
     public Task<Annonce> GetAnnonceById(string annonceId)
     {
         return _annonceRepository.GetAnnonceById(annonceId);
+    }
+    
+    public async Task ValidateGarden(string annonceId, string gardenId)
+    {
+        var annonce = await _annonceRepository.GetAnnonceById(annonceId);
+        annonce.Status = AnnonceStatus.GardenFound;
+        annonce.PossiblesGardiensId = new List<string>{ gardenId };
+        await _annonceRepository.UpdateAnnonce(annonceId, annonce);
     }
 
 }

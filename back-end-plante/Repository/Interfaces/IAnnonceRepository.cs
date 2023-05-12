@@ -8,4 +8,5 @@ public interface IAnnonceRepository
     public Task CreateAnnonce(Annonce request);
     public Task AddPossibleGarden(string annonceId, string possibleGardenId);
     public Task DeleteAnnonce(string annonceId);
+    public Task UpdateAnnonce(string annonceId, Annonce annonce);
 }

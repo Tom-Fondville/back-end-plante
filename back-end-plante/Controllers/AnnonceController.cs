@@ -49,4 +49,11 @@ public class AnnonceController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
+    [HttpPost("{id}/validateGarden")]
+    public async Task<IActionResult> ValidateGarden([FromRoute] string id, [FromQuery] string garden)
+    {
+        return NoContent();
+    }
+
 }

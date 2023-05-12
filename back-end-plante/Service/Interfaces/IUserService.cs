@@ -12,4 +12,5 @@ public interface IUserService
     Task<User> GetUserById(string id);
     Task UpdateUser(string userId ,UserRequest userRequest);
     Task DeleteUserById(string id);
+    Task AddAdresse(string userId, List<Adress> adresses);
 }

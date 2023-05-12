@@ -55,6 +55,14 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
+    [HttpPost("Address")]
+    public async Task<IActionResult> AddAddress([FromQuery] string userId, [FromBody] List<Adress> adresses)
+    {
+        await _userService.AddAdresse(userId, adresses);
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUserById(string id)
     {

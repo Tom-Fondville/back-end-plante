@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<User> GetUserByMailAndPassword(string mail, string password);
     Task UpdateUser(string userId, User user);
     Task DeleteUserById(string id);
+    Task AddAdresse(string userId, List<Adress> adresses);
 }
