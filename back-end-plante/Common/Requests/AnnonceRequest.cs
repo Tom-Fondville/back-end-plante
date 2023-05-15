@@ -1,15 +1,12 @@
 using back_end_plante.Common.Enums;
+using back_end_plante.Common.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace back_end_plante.Common.Models;
+namespace back_end_plante.Common.Requests;
 
-public class Annonce
+public class AnnonceRequest
 {
-    [BsonId]
-    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-    public string Id { get; set; }
-    
     [BsonElement("startDate")]
     public DateTime StartDate { get; set; }
     
@@ -18,10 +15,7 @@ public class Annonce
     
     [BsonElement("adress")]
     public Adress Adress { get; set; }
-    
-    [BsonElement("possiblesGardiensId")]
-    public List<string> PossiblesGardiensId { get; set; }
-    
+
     [BsonElement("plantsId")]
     public List<string> PlantsId { get; set; }
     
@@ -31,4 +25,18 @@ public class Annonce
     
     [BsonElement("status")]
     public AnnonceStatus Status { get; set; }
+
+    public Annonce ToAnnonce()
+    {
+        return new Annonce
+        {
+            StartDate = StartDate,
+            EndDate = EndDate,
+            Adress = Adress,
+            PossiblesGardiensId = new List<string>(),
+            PlantsId = PlantsId,
+            UserId = UserId,
+            Status = AnnonceStatus.Waiting
+        };
+    }
 }

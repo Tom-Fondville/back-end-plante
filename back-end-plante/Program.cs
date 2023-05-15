@@ -24,7 +24,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 // Add services to the container.
 
-// builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlanteRepository, PlanteRepositry>();
 
 builder.Services.AddControllers();

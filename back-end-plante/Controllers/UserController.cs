@@ -1,9 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using back_end_plante.Common.Models;
+using back_end_plante.Common.Requests;
+using back_end_plante.Common.Requests.user;
 using back_end_plante.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace back_end_plante.Controllers;
 
@@ -11,42 +12,61 @@ namespace back_end_plante.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly IUtilisateurService _utilisateurService;
+    private readonly IUserService _userService;
 
-    public UserController(IConfiguration configuration, IUtilisateurService utilisateurService)
+    public UserController(IUserService userService)
     {
-        _configuration = configuration;
-        _utilisateurService = utilisateurService;
+        _userService = userService;
     }
 
-
+    [AllowAnonymous]
     [HttpGet("login")]
-    public IActionResult Login([FromQuery] string email, [FromQuery] string password)
+    public async Task<IActionResult> Login([FromQuery] string email, [FromQuery] string password)
     {
-        var token = GenerateToken("tom");
+        var token = await _userService.Login(email, password);
         return Ok(new
         {
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = token.ValidTo
         });
     }
-    
-    private JwtSecurityToken GenerateToken(string mail)
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier,mail),
-        };
-        return new JwtSecurityToken
-        (
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.AddMinutes(15),
-            signingCredentials: credentials
-        );
+        await _userService.Register(userRequest);
+        return NoContent();
+    }
+    
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<User> GetUserById([FromRoute] string id)
+    {
+        return await _userService.GetUserById(id);
+    }
+    
+    [Authorize]
+    [HttpPost("{id}")]
+    public async Task<IActionResult> UpdateUserById([FromRoute] string id, [FromBody] UserRequest userRequest)
+    {
+        await _userService.UpdateUser(id, userRequest);
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("Address")]
+    public async Task<IActionResult> AddAddress([FromQuery] string userId, [FromBody] List<Adress> adresses)
+    {
+        await _userService.AddAdresse(userId, adresses);
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUserById(string id)
+    {
+        await _userService.DeleteUserById(id);
+        return NoContent();
     }
 }
