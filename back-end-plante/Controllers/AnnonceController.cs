@@ -53,6 +53,7 @@ public class AnnonceController : ControllerBase
     [HttpPost("{id}/validateGarden")]
     public async Task<IActionResult> ValidateGarden([FromRoute] string id, [FromQuery] string garden)
     {
+        await _annonceService.ValidateGarden(id, garden);
         return NoContent();
     }
 

@@ -49,6 +49,14 @@ public class ForumController : ControllerBase
     }
 
     [Authorize]
+    [HttpPost("Forum")]
+    public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
+    {
+        await _forumService.UpdateForum(forum);
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteForum([FromRoute] string id)
     {

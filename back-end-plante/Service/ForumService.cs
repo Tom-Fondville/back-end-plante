@@ -39,6 +39,11 @@ public class ForumService : IForumService
         await _forumRepository.UpdateForum(request.ForumId, request.ToForum());
     }
 
+    public Task UpdateForum(Forum request)
+    {
+        return _forumRepository.UpdateForum(request.Id, request);
+    }
+
     public Task DeleteForum(string forumId)
     {
         return _forumRepository.DeleteForum(forumId);
