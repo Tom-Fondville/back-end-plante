@@ -9,5 +9,6 @@ public interface IForumService
     Task<Forum> GetForumById(string forumId);
     Task CreateQuestion(CreateQuestionRequest request);
     Task AddResponse(AddReponseRequest request);
+    Task UpdateForum(Forum request);
     Task DeleteForum(string forumId);
 }
