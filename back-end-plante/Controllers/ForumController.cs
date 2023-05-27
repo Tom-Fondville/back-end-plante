@@ -18,6 +18,10 @@ public class ForumController : ControllerBase
         _forumService = forumService;
     }
 
+    /// <summary>
+    /// Get all forum messages
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     public async Task<List<Forum>> GetForums()
@@ -25,6 +29,11 @@ public class ForumController : ControllerBase
         return await _forumService.GetForums();
     }
 
+    /// <summary>
+    /// Get a forum message by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("{id}")]
     public async Task<Forum> GetForum([FromRoute] string id)
@@ -32,6 +41,11 @@ public class ForumController : ControllerBase
         return await _forumService.GetForumById(id);
     }
 
+    /// <summary>
+    /// Post a question in the forum
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("Question")]
     public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequest request)
@@ -40,6 +54,11 @@ public class ForumController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Post a response to a question in the forum
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("Response")]
     public async Task<IActionResult> AddResponse([FromBody] AddReponseRequest request)
@@ -48,6 +67,11 @@ public class ForumController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Update a forum question or/and response
+    /// </summary>
+    /// <param name="forum"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("Forum")]
     public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
@@ -56,6 +80,11 @@ public class ForumController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Delete a forum message 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteForum([FromRoute] string id)

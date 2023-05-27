@@ -18,6 +18,11 @@ public class AnnonceController : ControllerBase
         _annonceService = annonceService;
     }
 
+    /// <summary>
+    /// Get annonce by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("{id}")]
     public async Task<Annonce> GetAnnonceById([FromRoute] string id)
@@ -25,6 +30,11 @@ public class AnnonceController : ControllerBase
         return await _annonceService.GetAnnonceById(id);
     }
     
+    /// <summary>
+    /// Create annonce
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateAnnonce([FromBody] AnnonceRequest request)
@@ -33,6 +43,12 @@ public class AnnonceController : ControllerBase
         return NoContent();
     }
     
+    /// <summary>
+    /// Add a possible garden
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="possibleGardenId"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{id}")]
     public async Task<IActionResult> AddPossibleGardenId([FromRoute] string id, [FromQuery] string possibleGardenId)
@@ -40,7 +56,12 @@ public class AnnonceController : ControllerBase
         await _annonceService.AddPossibleGarden(id,possibleGardenId);
         return NoContent();
     }
-
+    
+    /// <summary>
+    /// delete a annonce by id 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAnnonce([FromRoute] string id)
@@ -48,7 +69,13 @@ public class AnnonceController : ControllerBase
         await _annonceService.DeleteAnnonce(id);
         return NoContent();
     }
-
+    
+    /// <summary>
+    /// validate a garden  
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="garden"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{id}/validateGarden")]
     public async Task<IActionResult> ValidateGarden([FromRoute] string id, [FromQuery] string garden)
