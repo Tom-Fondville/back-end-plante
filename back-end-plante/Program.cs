@@ -20,6 +20,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+const string myPolicy = "myPolicy"; 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myPolicy, policy =>
+    {
+        policy.AllowAnyOrigin();
+    });
+});
 
 
 // Add services to the container.
@@ -49,5 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(myPolicy);
 
 app.Run();
