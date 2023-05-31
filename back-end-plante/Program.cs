@@ -20,11 +20,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+const string myPolicy = "myPolicy"; 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myPolicy, policy =>
+    {
+        policy.AllowAnyOrigin();
+    });
+});
 
 
 // Add services to the container.
 
-// builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlanteRepository, PlanteRepositry>();
 
 builder.Services.AddControllers();
@@ -48,5 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(myPolicy);
 
 app.Run();

@@ -16,7 +16,7 @@ public class Plant
     public string UserId { get; set; }
     
     [BsonElement("Advice")]
-    public Advice Advice { get; set; }
+    public string Advice { get; set; }
     
     [BsonElement("pictures")]
     public Picture pictures { get; set; }

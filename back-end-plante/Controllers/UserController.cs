@@ -1,9 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using back_end_plante.Common.Models;
+using back_end_plante.Common.Requests;
+using back_end_plante.Common.Requests.user;
 using back_end_plante.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace back_end_plante.Controllers;
 
@@ -11,42 +12,94 @@ namespace back_end_plante.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly IUtilisateurService _utilisateurService;
+    private readonly IUserService _userService;
 
-    public UserController(IConfiguration configuration, IUtilisateurService utilisateurService)
+    public UserController(IUserService userService)
     {
-        _configuration = configuration;
-        _utilisateurService = utilisateurService;
+        _userService = userService;
     }
 
-
+    /// <summary>
+    /// login and give you a token 
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
     [HttpGet("login")]
-    public IActionResult Login([FromQuery] string email, [FromQuery] string password)
+    public async Task<IActionResult> Login([FromQuery] string email, [FromQuery] string password)
     {
-        var token = GenerateToken("tom");
+        var token = await _userService.Login(email, password);
         return Ok(new
         {
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = token.ValidTo
         });
     }
-    
-    private JwtSecurityToken GenerateToken(string mail)
+
+    /// <summary>
+    /// register
+    /// </summary>
+    /// <param name="userRequest"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier,mail),
-        };
-        return new JwtSecurityToken
-        (
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.AddMinutes(15),
-            signingCredentials: credentials
-        );
+        await _userService.Register(userRequest);
+        return NoContent();
+    }
+    
+    /// <summary>
+    /// Get a user by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<User> GetUserById([FromRoute] string id)
+    {
+        return await _userService.GetUserById(id);
+    }
+    
+    /// <summary>
+    /// update a user
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="userRequest"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("{id}")]
+    public async Task<IActionResult> UpdateUserById([FromRoute] string id, [FromBody] UserRequest userRequest)
+    {
+        await _userService.UpdateUser(id, userRequest);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// add a adresse 
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adresses"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("Address")]
+    public async Task<IActionResult> AddAddress([FromQuery] string userId, [FromBody] List<Adress> adresses)
+    {
+        await _userService.AddAdresse(userId, adresses);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// delete a user
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUserById(string id)
+    {
+        await _userService.DeleteUserById(id);
+        return NoContent();
     }
 }
