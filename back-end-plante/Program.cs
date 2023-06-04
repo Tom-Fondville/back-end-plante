@@ -62,6 +62,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapGet("/health", () => "healthy");
+app.MapGet("", () => "hello");
 
 app.UseCors(myPolicy);
 
