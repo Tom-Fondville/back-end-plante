@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://172.31.19.163:14;http://localhost:5236",
+      "applicationUrl": "https://localhost:8080;http://localhost:5236",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_URI": "mongodb+srv://MsprPlanteAcces:e2t3Qzcz3s2rrzmf@cluster0.1gpxzxs.mongodb.net/?retryWrites=true&w=majority"
