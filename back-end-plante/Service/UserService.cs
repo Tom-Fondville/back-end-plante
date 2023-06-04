@@ -3,8 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using back_end_plante.Common.Extensions;
 using back_end_plante.Common.Models;
-using back_end_plante.Common.Requests;
 using back_end_plante.Common.Requests.user;
+using back_end_plante.Common.Responses.User;
 using back_end_plante.Repository.Interfaces;
 using back_end_plante.Service.Interfaces;
 using back_end_plante.Utils;
@@ -22,11 +22,16 @@ public class UserService : IUserService
         _configuration = configuration;
     }
 
-    public async Task<JwtSecurityToken> Login(string email, string password)
+    public async Task<LoginResponse> Login(string email, string password)
     {
         var user = await _userRepository.GetUserByMailAndPassword(email, Hasher.Hash(password));
-        return GenerateToken(user);
-
+        var token = GenerateToken(user);
+        return new LoginResponse
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            ExpirationDate = token.ValidTo,
+            UserId = user.Id
+        };
     }
     
     public Task Register(UserRequest userRequest)

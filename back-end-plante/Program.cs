@@ -27,6 +27,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: myPolicy, policy =>
     {
         policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
     });
 });
 
@@ -58,6 +60,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/health", () => "healthy");
+app.MapGet("", () => "hello");
 
 app.UseCors(myPolicy);
 

@@ -30,11 +30,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Login([FromQuery] string email, [FromQuery] string password)
     {
         var token = await _userService.Login(email, password);
-        return Ok(new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            expiration = token.ValidTo
-        });
+        return Ok(token);
     }
 
     /// <summary>
