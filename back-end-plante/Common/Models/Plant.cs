@@ -15,7 +15,7 @@ public class Plant
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; }
     
-    [BsonElement("Advice")]
+    [BsonElement("advice")]
     public string Advice { get; set; }
     
     [BsonElement("pictures")]

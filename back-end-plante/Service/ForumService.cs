@@ -36,7 +36,7 @@ public class ForumService : IForumService
         forum.BotanistId = request.BotanistId;
         forum.Response = request.Response;
 
-        await _forumRepository.UpdateForum(request.ForumId, request.ToForum());
+        await _forumRepository.UpdateForum(request.ForumId, forum);
     }
 
     public Task UpdateForum(Forum request)

@@ -33,10 +33,12 @@ public class ForumRepository : MsprPlanteRepositoryBase, IForumRepository
     public async Task<Forum> GetForumById(string forumId)
     {
         var filter = Builders<Forum>.Filter.Eq(f => f.Id, forumId);
+        var response = await _forumCollection.FindAsync(filter);
+        
+        var forum = response.ToList().FirstOrDefault();
+        if (forum is null) throw new BadHttpRequestException("Forum not found");
 
-        var reponse = await _forumCollection.FindAsync(filter);
-
-        return reponse.ToList().FirstOrDefault();
+        return forum;
     }
 
     public async Task CreateForum(Forum forum)

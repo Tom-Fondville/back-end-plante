@@ -40,6 +40,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlanteRepository, PlanteRepositry>();
+builder.Services.AddScoped<IAnnonceService, AnnonceService>();
+builder.Services.AddScoped<IAnnonceRepository, AnnonceRepository>();
+builder.Services.AddScoped<IForumService, ForumService>();
+builder.Services.AddScoped<IForumRepository, ForumRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
