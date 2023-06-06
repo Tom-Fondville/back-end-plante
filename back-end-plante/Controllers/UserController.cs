@@ -1,6 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
 using back_end_plante.Common.Models;
-using back_end_plante.Common.Requests;
 using back_end_plante.Common.Requests.user;
 using back_end_plante.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -39,11 +37,23 @@ public class UserController : ControllerBase
     /// <param name="userRequest"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("register")]
+    [HttpPut("register")]
     public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
         await _userService.Register(userRequest);
         return NoContent();
+    }
+    
+    /// <summary>
+    /// Get a user by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    public async Task<List<User>> GetUsers()
+    {
+        return await _userService.GetUsers();
     }
     
     /// <summary>
@@ -65,10 +75,10 @@ public class UserController : ControllerBase
     /// <param name="userRequest"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost("{id}")]
-    public async Task<IActionResult> UpdateUserById([FromRoute] string id, [FromBody] UserRequest userRequest)
+    [HttpPost]
+    public async Task<IActionResult> UpdateUserById([FromBody] User userRequest)
     {
-        await _userService.UpdateUser(id, userRequest);
+        await _userService.UpdateUser(userRequest);
         return NoContent();
     }
 

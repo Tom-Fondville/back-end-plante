@@ -34,6 +34,14 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
 
         return user;
     }
+
+    public async Task<List<User>> GetUsers()
+    {
+        var filter = Builders<User>.Filter.Empty;
+        var response = await _userCollection.FindAsync(filter);
+
+        return response.ToList();
+    }
     
     public async Task<User> GetUserByMailAndPassword(string mail, string password)
     {
@@ -46,7 +54,7 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
         return user;
     }
 
-    public async Task UpdateUser(string userId, User user)
+    public async Task UpdateUser(User user)
     {
         var builder = Builders<User>.Filter;
 

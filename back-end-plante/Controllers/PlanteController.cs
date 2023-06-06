@@ -24,8 +24,8 @@ public class PlanteController
     /// </summary>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("All")]
-    public Task<List<Plant>> Get()
+    [HttpGet]
+    public Task<List<Plant>> GetALl()
     {
         return _planteRepository.GetPlantsAsync();
     }
@@ -60,8 +60,8 @@ public class PlanteController
     /// <param name="plantRequest"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost("addPlant")]
-    public Task<Plant> AddPlant([FromBody] PlantRequest plantRequest)
+    [HttpPut]
+    public Task<Plant> CreatePlant([FromBody] PlantRequest plantRequest)
     {
         return _planteRepository.AddPlant(plantRequest.toPlant());
         
@@ -73,7 +73,7 @@ public class PlanteController
     /// <param name="plant"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPut("modifyPlant")]
+    [HttpPost]
     public Task<Plant> ModifyPlant([FromBody] Plant plant)
     {
         return _planteRepository.ModifyPlant(plant);

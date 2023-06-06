@@ -9,7 +9,8 @@ public interface IUserService
     Task<LoginResponse> Login(string email, string password);
     Task Register(UserRequest user);
     Task<User> GetUserById(string id);
-    Task UpdateUser(string userId ,UserRequest userRequest);
+    Task<List<User>> GetUsers();
+    Task UpdateUser(User userRequest);
     Task DeleteUserById(string id);
     Task AddAdresse(string userId, List<Adress> adresses);
 }

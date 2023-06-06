@@ -36,7 +36,7 @@ public class AnnonceController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> CreateAnnonce([FromBody] AnnonceRequest request)
     {
         await _annonceService.CreateAnnonce(request);

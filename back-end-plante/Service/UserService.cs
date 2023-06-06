@@ -45,10 +45,14 @@ public class UserService : IUserService
         return _userRepository.GetUserById(id);
     }
 
-    public Task UpdateUser(string userId, UserRequest userRequest)
+    public Task<List<User>> GetUsers()
     {
-        if (!userRequest.IsValid()) throw new BadHttpRequestException("UserRequest not valid");
-        return _userRepository.UpdateUser(userId ,userRequest.ToUser());
+        return _userRepository.GetUsers();
+    }
+
+    public Task UpdateUser(User userRequest)
+    {
+        return _userRepository.UpdateUser(userRequest);
     }
 
     public Task DeleteUserById(string id)

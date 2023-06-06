@@ -73,7 +73,7 @@ public class ForumController : ControllerBase
     /// <param name="forum"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost("Forum")]
+    [HttpPost]
     public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
     {
         await _forumService.UpdateForum(forum);
