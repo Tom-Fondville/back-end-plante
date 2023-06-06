@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using back_end_plante.Repository;
 using back_end_plante.Repository.Interfaces;
@@ -5,6 +6,7 @@ using back_end_plante.Service;
 using back_end_plante.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +44,11 @@ builder.Services.AddScoped<IPlanteRepository, PlanteRepositry>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 var app = builder.Build();
 
