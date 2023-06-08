@@ -24,10 +24,10 @@ public class UserController : ControllerBase
     /// <param name="password"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpGet("login")]
-    public async Task<IActionResult> Login([FromQuery] string email, [FromQuery] string password)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        var token = await _userService.Login(email, password);
+        var token = await _userService.Login(loginRequest);
         return Ok(token);
     }
 

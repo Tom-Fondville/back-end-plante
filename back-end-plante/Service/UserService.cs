@@ -22,9 +22,9 @@ public class UserService : IUserService
         _configuration = configuration;
     }
 
-    public async Task<LoginResponse> Login(string email, string password)
+    public async Task<LoginResponse> Login(LoginRequest loginRequest)
     {
-        var user = await _userRepository.GetUserByMailAndPassword(email, Hasher.Hash(password));
+        var user = await _userRepository.GetUserByMailAndPassword(loginRequest.Email, Hasher.Hash(loginRequest.Password));
         var token = GenerateToken(user);
         return new LoginResponse
         {
