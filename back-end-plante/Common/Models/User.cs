@@ -21,7 +21,7 @@ public class User
     public string Password { get; set; }
     
     [BsonElement("phoneNumber")]
-    public string PhoneNumer { get; set; }
+    public string PhoneNumber { get; set; }
     
     [BsonElement("isAdmin")]
     public bool IsAdmin { get; set; }

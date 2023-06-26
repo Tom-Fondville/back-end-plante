@@ -6,7 +6,6 @@ using back_end_plante.Service;
 using back_end_plante.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +43,7 @@ builder.Services.AddScoped<IAnnonceService, AnnonceService>();
 builder.Services.AddScoped<IAnnonceRepository, AnnonceRepository>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<IForumRepository, ForumRepository>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -11,11 +11,12 @@ namespace back_end_plante.Controllers;
 [Route("[controller]")]
 public class PlanteController
 {
-
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPlanteRepository _planteRepository;
 
-    public PlanteController(IPlanteRepository planteRepository)
+    public PlanteController(IHttpContextAccessor httpContextAccessor, IPlanteRepository planteRepository)
     {
+        _httpContextAccessor = httpContextAccessor;
         _planteRepository = planteRepository;
     }
     
@@ -25,9 +26,11 @@ public class PlanteController
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    public Task<List<Plant>> GetALl()
+    public async Task<List<Plant>> GetPlants()
     {
-        return _planteRepository.GetPlantsAsync();
+        _httpContextAccessor.HttpContext?.Request.Headers.TryGetValue("Authorization", out var authorizationHeaderValue);
+
+        return await _planteRepository.GetPlantsAsync();
     }
     
     /// <summary>

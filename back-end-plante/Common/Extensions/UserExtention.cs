@@ -15,7 +15,7 @@ public static class UserExtention
             SurName = userRequest.SurName,
             Mail = userRequest.Mail,
             Password = Hasher.Hash(userRequest.Password),
-            PhoneNumer = userRequest.PhoneNumer,
+            PhoneNumber = userRequest.PhoneNumer,
             IsAdmin = false,
             IsBotaniste = false,
             Adresses = new List<Adress> { userRequest.Adresse }
