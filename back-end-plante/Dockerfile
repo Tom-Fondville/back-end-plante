@@ -1,20 +1,29 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿# Étape de construction
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["back-end-plante/back-end-plante.csproj", "back-end-plante/"]
-RUN dotnet restore "back-end-plante/back-end-plante.csproj"
+# Copie des fichiers de projet
+COPY back-end-plante.csproj ./
+COPY appsettings.json ./
 COPY . .
-WORKDIR "/src/back-end-plante"
-RUN dotnet build "back-end-plante.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "back-end-plante.csproj" -c Release -o /app/publish
+# Restauration des dépendances NuGet
+RUN dotnet restore
 
-FROM base AS final
+# Construction de l'application
+RUN dotnet publish -c Release -o out
+
+# Étape d'exécution
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copie des fichiers binaires de l'étape de construction
+COPY --from=build-env /app/out .
+
+# Exposition du port de l'API
+EXPOSE 8888
+EXPOSE 5236
+
+
+# Exécution de l'application
 ENTRYPOINT ["dotnet", "back-end-plante.dll"]

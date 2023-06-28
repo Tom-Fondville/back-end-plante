@@ -3,20 +3,17 @@ using back_end_plante.Common.Requests;
 using back_end_plante.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace back_end_plante.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PlanteController
+public class PlanteController : BaseController
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPlanteRepository _planteRepository;
 
-    public PlanteController(IHttpContextAccessor httpContextAccessor, IPlanteRepository planteRepository)
+    public PlanteController(IHttpContextAccessor httpContextAccessor, IPlanteRepository planteRepository) : base(httpContextAccessor)
     {
-        _httpContextAccessor = httpContextAccessor;
         _planteRepository = planteRepository;
     }
     
@@ -28,7 +25,8 @@ public class PlanteController
     [HttpGet]
     public async Task<List<Plant>> GetPlants()
     {
-        _httpContextAccessor.HttpContext?.Request.Headers.TryGetValue("Authorization", out var authorizationHeaderValue);
+        if (!IsAdmin())
+            throw new UnauthorizedAccessException("you aren't admin");
 
         return await _planteRepository.GetPlantsAsync();
     }
@@ -45,15 +43,24 @@ public class PlanteController
         return _planteRepository.GetPlantById(id);
     }
     
+    //TODO faire une route de getPlante by listId
+    [Authorize]
+    [HttpGet("ids")]
+    public Task<List<Plant>> GetPlants([FromQuery] List<string> plantIds)
+    {
+        return null;
+    }
+
     /// <summary>
     /// Get all plants by user id 
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("user/{userId}")]
-    public Task<List<Plant>> GetPlantsByUserId([FromRoute] string userId)
+    [HttpGet("user")]
+    public Task<List<Plant>> GetPlantsByUserId()
     {
+        var userId = GetUserId();
         return _planteRepository.GetPlantsByUserId(userId);
     }
     
@@ -66,8 +73,9 @@ public class PlanteController
     [HttpPut]
     public Task<Plant> CreatePlant([FromBody] PlantRequest plantRequest)
     {
+        var userId = GetUserId();
+        plantRequest.UserId = userId;
         return _planteRepository.AddPlant(plantRequest.toPlant());
-        
     }
     
     /// <summary>
@@ -79,6 +87,9 @@ public class PlanteController
     [HttpPost]
     public Task<Plant> ModifyPlant([FromBody] Plant plant)
     {
+        var userId = GetUserId();
+        plant.UserId = userId;
+        
         return _planteRepository.ModifyPlant(plant);
     }
 
@@ -91,6 +102,21 @@ public class PlanteController
     [HttpDelete("deletePlant/{id}")]
     public Task<bool> DeletePlant([FromRoute] string id)
     {
+        if (!IsAdmin())
+            throw new UnauthorizedAccessException("you aren't admin");
+        
         return _planteRepository.DeletePlant(id);
+    }
+    
+    /// <summary>
+    /// delete a plant by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete("deletePlant/{id}/user")]
+    public Task<bool> DeletePlantByUserId([FromRoute] string id)
+    {
+        return _planteRepository.DeletePlant(id, GetUserId());
     }
 }

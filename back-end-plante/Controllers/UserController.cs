@@ -8,11 +8,11 @@ namespace back_end_plante.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly IUserService _userService;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
         _userService = userService;
     }
@@ -45,7 +45,7 @@ public class UserController : ControllerBase
     }
     
     /// <summary>
-    /// Get a user by id
+    /// Get all users
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -53,6 +53,9 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<List<User>> GetUsers()
     {
+        if (!IsAdmin())
+            throw new UnauthorizedAccessException("you aren't admin");
+
         return await _userService.GetUsers();
     }
     
@@ -62,10 +65,11 @@ public class UserController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("{id}")]
-    public async Task<User> GetUserById([FromRoute] string id)
+    [HttpGet("id")]
+    public async Task<User> GetUserById()
     {
-        return await _userService.GetUserById(id);
+        var userId = GetUserId();
+        return await _userService.GetUserById(userId);
     }
     
     /// <summary>
@@ -78,6 +82,9 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpdateUserById([FromBody] User userRequest)
     {
+        var userId = GetUserId();
+        userRequest.Id = userId;
+        
         await _userService.UpdateUser(userRequest);
         return NoContent();
     }
@@ -85,13 +92,13 @@ public class UserController : ControllerBase
     /// <summary>
     /// add a adresse 
     /// </summary>
-    /// <param name="userId"></param>
     /// <param name="adresses"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost("Address")]
-    public async Task<IActionResult> AddAddress([FromQuery] string userId, [FromBody] List<Adress> adresses)
+    public async Task<IActionResult> AddAddress([FromBody] List<Adress> adresses)
     {
+        var userId = GetUserId();
         await _userService.AddAdresse(userId, adresses);
         return NoContent();
     }
@@ -105,7 +112,19 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUserById(string id)
     {
+        if (!IsAdmin())
+            throw new UnauthorizedAccessException("you aren't admin");
+        
         await _userService.DeleteUserById(id);
+        return NoContent();
+    }
+    
+    [Authorize]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserById()
+    {
+        var userId = GetUserId();
+        await _userService.DeleteUserById(userId);
         return NoContent();
     }
 }

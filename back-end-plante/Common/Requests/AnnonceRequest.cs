@@ -21,7 +21,7 @@ public class AnnonceRequest
     
     [BsonElement("userId")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public List<string> UserId { get; set; }
+    public string UserId { get; set; }
     
     [BsonElement("status")]
     public AnnonceStatus Status { get; set; }

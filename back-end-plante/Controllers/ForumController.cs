@@ -9,11 +9,11 @@ namespace back_end_plante.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ForumController : ControllerBase
+public class ForumController : BaseController
 {
     private readonly IForumService _forumService;
 
-    public ForumController(IForumService forumService)
+    public ForumController(IForumService forumService, IHttpContextAccessor httpContextAccessor): base(httpContextAccessor)
     {
         _forumService = forumService;
     }
@@ -50,6 +50,8 @@ public class ForumController : ControllerBase
     [HttpPost("Question")]
     public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequest request)
     {
+        var userId = GetUserId();
+        request.RequestorId = userId;
         await _forumService.CreateQuestion(request);
         return NoContent();
     }
@@ -63,7 +65,10 @@ public class ForumController : ControllerBase
     [HttpPost("Response")]
     public async Task<IActionResult> AddResponse([FromBody] AddReponseRequest request)
     {
-        await _forumService.AddResponse(request);
+        var user = GetUserId();
+        if (IsBotaniste())
+            await _forumService.AddResponse(request);
+        
         return NoContent();
     }
 
@@ -89,7 +94,7 @@ public class ForumController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteForum([FromRoute] string id)
     {
-        await _forumService.DeleteForum(id);
+        await _forumService.DeleteForum(id, GetUserId());
         return NoContent();
     }
     

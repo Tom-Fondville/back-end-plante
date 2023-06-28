@@ -7,6 +7,6 @@ public interface IForumRepository
     Task<List<Forum>> GetForums();
     Task<Forum> GetForumById(string forumId);
     Task CreateForum(Forum forum);
-    Task DeleteForum(string forumId);
+    Task DeleteForum(string forumId, string userId);
     Task UpdateForum(string forumId, Forum forum);
 }

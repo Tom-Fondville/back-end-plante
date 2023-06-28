@@ -34,6 +34,15 @@ public class PlanteRepositry : MsprPlanteRepositoryBase, IPlanteRepository
         return result.ToList();
     }
 
+    public async Task<List<Plant>> GetPlantsByIdsAsync(List<string> plantIds)
+    {
+        var builder = Builders<Plant>.Filter;
+        var filter = builder.In("_id", plantIds);
+
+        var result = await _plantCollection.FindAsync(filter);
+        return result.ToList();
+    }
+
     public async Task<Plant> GetPlantById(string id)
     {
         var builder = Builders<Plant>.Filter;
@@ -89,6 +98,13 @@ public class PlanteRepositry : MsprPlanteRepositoryBase, IPlanteRepository
         return result.DeletedCount > 0;
     }
 
+    public async Task<bool> DeletePlant(string id, string userId)
+    {
+        var filter = Builders<Plant>.Filter.Eq(p => p.Id, id)
+                     & Builders<Plant>.Filter.Eq(p => p.UserId, userId);
 
+        var result = await _plantCollection.DeleteOneAsync(filter);
 
+        return result.DeletedCount > 0;
+    }
 }

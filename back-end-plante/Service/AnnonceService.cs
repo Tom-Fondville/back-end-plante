@@ -20,14 +20,19 @@ public class AnnonceService : IAnnonceService
         return _annonceRepository.CreateAnnonce(request.ToAnnonce());
     }
 
-    public Task AddPossibleGarden(string annonceId, string possibleGardenId)
+    public Task AddPossibleGarden(string annonceId, string userId, string possibleGardenId)
     {
-        return _annonceRepository.AddPossibleGarden(annonceId, possibleGardenId);
+        return _annonceRepository.AddPossibleGarden(annonceId, userId, possibleGardenId);
     }
 
-    public Task DeleteAnnonce(string annonceId)
+    public Task DeleteAnnonce(string annonceId, string userId)
     {
-        return _annonceRepository.DeleteAnnonce(annonceId);
+        return _annonceRepository.DeleteAnnonce(annonceId, userId);
+    }
+
+    public Task<List<Annonce>> GetAnnonce()
+    {
+        return _annonceRepository.GetAnnonce();
     }
 
     public Task<Annonce> GetAnnonceById(string annonceId)
@@ -35,12 +40,12 @@ public class AnnonceService : IAnnonceService
         return _annonceRepository.GetAnnonceById(annonceId);
     }
     
-    public async Task ValidateGarden(string annonceId, string gardenId)
+    public async Task ValidateGarden(string annonceId, string userId, string gardenId)
     {
         var annonce = await _annonceRepository.GetAnnonceById(annonceId);
         annonce.Status = AnnonceStatus.GardenFound;
         annonce.PossiblesGardiensId = new List<string>{ gardenId };
-        await _annonceRepository.UpdateAnnonce(annonceId, annonce);
+        await _annonceRepository.UpdateAnnonce(annonceId, userId, annonce);
     }
 
 }

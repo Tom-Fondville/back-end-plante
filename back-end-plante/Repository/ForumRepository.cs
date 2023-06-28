@@ -46,9 +46,10 @@ public class ForumRepository : MsprPlanteRepositoryBase, IForumRepository
         await _forumCollection.InsertOneAsync(forum);
     }
 
-    public async Task DeleteForum(string forumId)
+    public async Task DeleteForum(string forumId, string userId)
     {
-        var filter = Builders<Forum>.Filter.Eq(f => f.Id, forumId);
+        var filter = Builders<Forum>.Filter.Eq(f => f.Id, forumId)
+            & Builders<Forum>.Filter.Eq(f => userId, userId);
 
         await _forumCollection.DeleteOneAsync(filter);
     }

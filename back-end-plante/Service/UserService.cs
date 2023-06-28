@@ -74,6 +74,8 @@ public class UserService : IUserService
             new Claim(ClaimTypes.NameIdentifier,user.Mail),
             new Claim("userName",user.Name),
             new Claim("userId",user.Id),
+            new Claim("IsBotaniste", user.IsBotaniste.ToString()),
+            new Claim("IsAdmin", user.IsAdmin.ToString())
         };
         return new JwtSecurityToken
         (

@@ -44,8 +44,8 @@ public class ForumService : IForumService
         return _forumRepository.UpdateForum(request.Id, request);
     }
 
-    public Task DeleteForum(string forumId)
+    public Task DeleteForum(string forumId, string userId)
     {
-        return _forumRepository.DeleteForum(forumId);
+        return _forumRepository.DeleteForum(forumId, userId);
     }
 }

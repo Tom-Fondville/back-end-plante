@@ -6,6 +6,7 @@ using back_end_plante.Service;
 using back_end_plante.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,7 +53,42 @@ builder.Services.AddSwaggerGen(options =>
 {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please Insert Token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
+
+// services.AddSwaggerGen(c => {
+//     c.SwaggerDoc("v1", new Info { Title = "You api title", Version = "v1" });
+//     c.AddSecurityDefinition("Bearer",
+//         new ApiKeyScheme { In = "header",
+//             Description = "Please enter into field the word 'Bearer' following by space and JWT", 
+//             Name = "Authorization", Type = "apiKey" });
+//     c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+//         { "Bearer", Enumerable.Empty<string>() },
+//     });
+//
+// });
 
 var app = builder.Build();
 
