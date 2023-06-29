@@ -43,12 +43,11 @@ public class PlanteController : BaseController
         return _planteRepository.GetPlantById(id);
     }
     
-    //TODO faire une route de getPlante by listId
     [Authorize]
     [HttpGet("ids")]
-    public Task<List<Plant>> GetPlants([FromQuery] List<string> plantIds)
+    public async Task<List<Plant>> GetPlants([FromQuery] List<string> plantIds)
     {
-        return null;
+        return await _planteRepository.GetPlantsByIdsAsync(plantIds);
     }
 
     /// <summary>

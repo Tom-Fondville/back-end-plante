@@ -40,7 +40,7 @@ public class AnnonceController : BaseController
     {
         return await _annonceService.GetAnnonce();
     }
-    
+
     /// <summary>
     /// Create annonce
     /// </summary>

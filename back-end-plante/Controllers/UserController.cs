@@ -88,6 +88,23 @@ public class UserController : BaseController
         await _userService.UpdateUser(userRequest);
         return NoContent();
     }
+    
+    /// <summary>
+    /// update a user from admin
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="userRequest"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("admin")]
+    public async Task<IActionResult> UpdateUserByIdFromAdmin([FromBody] User userRequest)
+    {
+        if (!IsAdmin())
+            return Unauthorized("You'r not admin");
+
+        await _userService.UpdateUser(userRequest);
+        return NoContent();
+    }
 
     /// <summary>
     /// add a adresse 
