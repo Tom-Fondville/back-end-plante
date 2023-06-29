@@ -7,7 +7,7 @@ public interface IUserRepository
     Task Register(User user);
     Task<User> GetUserById(string id);
     Task<List<User>> GetUsers();
-    Task<User> GetUserByMailAndPassword(string mail, string password);
+    Task<User> GetUserByMailAndPassword(string mail, string password, bool isForAdmin = false);
     Task UpdateUser(User user);
     Task DeleteUserById(string id);
     Task AddAdresse(string userId, List<Adress> adresses);

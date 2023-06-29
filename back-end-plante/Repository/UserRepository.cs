@@ -43,9 +43,13 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
         return response.ToList();
     }
     
-    public async Task<User> GetUserByMailAndPassword(string mail, string password)
+    public async Task<User> GetUserByMailAndPassword(string mail, string password, bool isForAdmin = false)
     {
         var filter = Builders<User>.Filter.Where(user => user.Mail == mail && user.Password == password);
+
+        if (isForAdmin)
+            filter &= Builders<User>.Filter.Eq(user => user.IsAdmin, true);
+
         var response = await _userCollection.FindAsync(filter);
         
         var user = response.ToList().FirstOrDefault();

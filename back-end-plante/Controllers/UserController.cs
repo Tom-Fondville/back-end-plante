@@ -27,7 +27,21 @@ public class UserController : BaseController
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        var token = await _userService.Login(loginRequest);
+        var token = await _userService.UserLogin(loginRequest);
+        return Ok(token);
+    }
+    
+    /// <summary>
+    /// login and give you a token for admin
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpPost("login/admin")]
+    public async Task<IActionResult> AdminLogin([FromBody] LoginRequest loginRequest)
+    {
+        var token = await _userService.AdminLogin(loginRequest);
         return Ok(token);
     }
 

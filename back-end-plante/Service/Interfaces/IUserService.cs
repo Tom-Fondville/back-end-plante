@@ -6,7 +6,8 @@ namespace back_end_plante.Service.Interfaces;
 
 public interface IUserService
 {
-    Task<LoginResponse> Login(LoginRequest loginRequest);
+    Task<LoginResponse> UserLogin(LoginRequest loginRequest);
+    Task<LoginResponse> AdminLogin(LoginRequest loginRequest);
     Task Register(UserRequest user);
     Task<User> GetUserById(string id);
     Task<List<User>> GetUsers();

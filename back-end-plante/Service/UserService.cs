@@ -22,9 +22,19 @@ public class UserService : IUserService
         _configuration = configuration;
     }
 
-    public async Task<LoginResponse> Login(LoginRequest loginRequest)
+    public Task<LoginResponse> UserLogin(LoginRequest loginRequest)
     {
-        var user = await _userRepository.GetUserByMailAndPassword(loginRequest.Email, Hasher.Hash(loginRequest.Password));
+        return Login(loginRequest);
+    }
+    
+    public Task<LoginResponse> AdminLogin(LoginRequest loginRequest)
+    {
+        return Login(loginRequest, true);
+    }
+    
+    private async Task<LoginResponse> Login(LoginRequest loginRequest, bool isForAdmin = false)
+    {
+        var user = await _userRepository.GetUserByMailAndPassword(loginRequest.Email, Hasher.Hash(loginRequest.Password), isForAdmin);
         var token = GenerateToken(user);
         return new LoginResponse
         {
@@ -33,7 +43,8 @@ public class UserService : IUserService
             UserId = user.Id
         };
     }
-    
+
+
     public Task Register(UserRequest userRequest)
     {
         if (!userRequest.IsValid()) throw new BadHttpRequestException("UserRequest not valid");
