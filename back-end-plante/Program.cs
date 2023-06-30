@@ -36,7 +36,6 @@ builder.Services.AddCors(options =>
 
 
 // Add services to the container.
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlanteRepository, PlanteRepositry>();
@@ -44,6 +43,7 @@ builder.Services.AddScoped<IAnnonceService, AnnonceService>();
 builder.Services.AddScoped<IAnnonceRepository, AnnonceRepository>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<IForumRepository, ForumRepository>();
+builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();

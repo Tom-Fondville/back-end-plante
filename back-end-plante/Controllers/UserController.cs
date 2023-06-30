@@ -79,9 +79,13 @@ public class UserController : BaseController
     /// <param name="id"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("id")]
-    public async Task<User> GetUserById()
+    [HttpGet("{id}")]
+    public async Task<User> GetUserById([FromRoute] string id)
     {
+        if (IsAdmin())
+        {
+            return await _userService.GetUserById(id);    
+        }
         var userId = GetUserId();
         return await _userService.GetUserById(userId);
     }
