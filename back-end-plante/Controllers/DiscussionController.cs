@@ -48,17 +48,15 @@ public class DiscussionController : BaseController
     }
 
     /// <summary>
-    /// Get all messages from a discussion 
+    /// Get all messages from a discussion
     /// </summary>
-    /// <param name="userId1"></param>
-    /// <param name="userId2"></param>
+    /// <param name="discussionId"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    public async Task<Discussion> GetMessagesByDiscution(string userId1, string userId2)
+    public async Task<Discussion> GetMessagesByDiscution(string discussionId)
     {
         var userId = GetUserId();
-        var discussionId = new DiscussionId { UserId1 = userId1, UserId2 = userId2 };
         var response = await _discussionRepository.GetMessagesByDiscution(discussionId, userId);
     
         return response;
@@ -79,11 +77,8 @@ public class DiscussionController : BaseController
 
         var discussion = new Discussion
         {
-            Id = new DiscussionId
-            {
-                UserId1 = user1.Id,
-                UserId2 = user2.Id
-            },
+            UserId1 = user1.Id,
+            UserId2 = user2.Id,
             LastUpdate = DateTime.UtcNow,
             Messages = new List<Message>(),
             UserName = $"{user2.Name} {user2.SurName}"
@@ -116,7 +111,7 @@ public class DiscussionController : BaseController
     /// <returns></returns>
     [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> DeleteDiscussionById(DiscussionId discussionId)
+    public async Task<IActionResult> DeleteDiscussionById(string discussionId)
     {
         var userId = GetUserId();
         var deletedCount = await _discussionRepository.DeleteDiscussionById(discussionId, userId);

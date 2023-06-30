@@ -7,8 +7,8 @@ public interface IDiscussionRepository
 {
     Task<List<Discussion>> GetDiscussions();
     Task<List<Discussion>> GetDiscussionsByUser(string userId);
-    Task<Discussion> GetMessagesByDiscution(DiscussionId discussionId, string userId);
-    Task CreateDiscution(Discussion discussion);
+    Task<Discussion> GetMessagesByDiscution(string discussionId, string userId);
+    Task<bool> CreateDiscution(Discussion discussion);
     Task SendMessage(SendMessageRequest request, string userId);
-    Task<long> DeleteDiscussionById(DiscussionId discussionId, string userId);
+    Task<long> DeleteDiscussionById(string discussionId, string userId);
 }
