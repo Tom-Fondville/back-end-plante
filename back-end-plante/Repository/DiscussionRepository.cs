@@ -54,8 +54,8 @@ public class DiscussionRepository : MsprPlanteRepositoryBase, IDiscussionReposit
     public async Task<Discussion> GetMessagesByDiscution(DiscussionId discussionId, string userId)
     {
         var filter = Builders<Discussion>.Filter.Where(discussion =>
-                discussion.Id.Equals(discussion)    
-                && discussion.Id.UserId1 == userId || discussion.Id.UserId2 == userId
+                discussion.Id.Equals(discussionId)    
+                && (discussion.Id.UserId1 == userId || discussion.Id.UserId2 == userId)
         );
 
         var response = await _messagingCollection.FindAsync(filter);

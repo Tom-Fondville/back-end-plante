@@ -50,16 +50,18 @@ public class DiscussionController : BaseController
     /// <summary>
     /// Get all messages from a discussion 
     /// </summary>
-    /// <param name="discussionId"></param>
+    /// <param name="userId1"></param>
+    /// <param name="userId2"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetMessagesByDiscution(DiscussionId discussionId)
+    public async Task<Discussion> GetMessagesByDiscution(string userId1, string userId2)
     {
         var userId = GetUserId();
+        var discussionId = new DiscussionId { UserId1 = userId1, UserId2 = userId2 };
         var response = await _discussionRepository.GetMessagesByDiscution(discussionId, userId);
     
-        return Ok(response);
+        return response;
     }
     
     /// <summary>
@@ -100,8 +102,11 @@ public class DiscussionController : BaseController
     [HttpPut]
     public async Task SendMessage([FromBody] SendMessageRequest request)
     {
-        var userId = GetUserId();
-        await _discussionRepository.SendMessage(request, userId);
+        var user = await _userRepository.GetUserById(GetUserId());
+        request.Message.UserName = user.SurName;
+        request.Message.Date = DateTime.UtcNow;
+        
+        await _discussionRepository.SendMessage(request, user.Id);
     }
     
     /// <summary>
