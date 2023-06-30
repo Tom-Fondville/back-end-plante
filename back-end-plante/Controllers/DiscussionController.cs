@@ -24,7 +24,7 @@ public class DiscussionController : BaseController
     /// </summary>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("all")]
+    [HttpGet]
     public async Task<IActionResult> GetDiscussions()
     {
         if (!IsAdmin())
@@ -38,10 +38,11 @@ public class DiscussionController : BaseController
     /// </summary>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("userId")]
-    public async Task<IActionResult> GetDiscussionsByUser()
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetDiscussionsByUser([FromRoute] string userId)
     {
-        var userId = GetUserId();
+        if (!IsAdmin())
+            userId = GetUserId();
     
         var response = await _discussionRepository.GetDiscussionsByUser(userId);
         return Ok(response);
@@ -53,11 +54,11 @@ public class DiscussionController : BaseController
     /// <param name="discussionId"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
-    public async Task<Discussion> GetMessagesByDiscution(string discussionId)
+    [HttpGet("{id}")]
+    public async Task<Discussion> GetMessagesByDiscution([FromRoute] string id)
     {
         var userId = GetUserId();
-        var response = await _discussionRepository.GetMessagesByDiscution(discussionId, userId);
+        var response = await _discussionRepository.GetMessagesByDiscution(id, userId);
     
         return response;
     }
