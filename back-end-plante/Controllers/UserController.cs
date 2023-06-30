@@ -51,7 +51,7 @@ public class UserController : BaseController
     /// <param name="userRequest"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPut("register")]
+    [HttpPut]
     public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
         await _userService.Register(userRequest);
@@ -61,16 +61,17 @@ public class UserController : BaseController
     /// <summary>
     /// Get all users
     /// </summary>
-    /// <param name="id"></param>
     /// <returns></returns>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     [Authorize]
     [HttpGet]
-    public async Task<List<User>> GetUsers()
+    public async Task<IActionResult> GetUsers()
     {
         if (!IsAdmin())
-            throw new UnauthorizedAccessException("you aren't admin");
+            return Unauthorized("you aren't admin");
 
-        return await _userService.GetUsers();
+        var response = await _userService.GetUsers();
+        return Ok(response);
     }
     
     /// <summary>
@@ -82,12 +83,10 @@ public class UserController : BaseController
     [HttpGet("{id}")]
     public async Task<User> GetUserById([FromRoute] string id)
     {
-        if (IsAdmin())
-        {
-            return await _userService.GetUserById(id);    
-        }
-        var userId = GetUserId();
-        return await _userService.GetUserById(userId);
+        if (!IsAdmin())
+            id = GetUserId();
+        
+        return await _userService.GetUserById(id);
     }
     
     /// <summary>
@@ -100,26 +99,9 @@ public class UserController : BaseController
     [HttpPost]
     public async Task<IActionResult> UpdateUserById([FromBody] User userRequest)
     {
-        var userId = GetUserId();
-        userRequest.Id = userId;
-        
-        await _userService.UpdateUser(userRequest);
-        return NoContent();
-    }
-    
-    /// <summary>
-    /// update a user from admin
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="userRequest"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPost("admin")]
-    public async Task<IActionResult> UpdateUserByIdFromAdmin([FromBody] User userRequest)
-    {
         if (!IsAdmin())
-            return Unauthorized("You'r not admin");
-
+            userRequest.Id = GetUserId();
+        
         await _userService.UpdateUser(userRequest);
         return NoContent();
     }
@@ -148,18 +130,9 @@ public class UserController : BaseController
     public async Task<IActionResult> DeleteUserById(string id)
     {
         if (!IsAdmin())
-            throw new UnauthorizedAccessException("you aren't admin");
+            id = GetUserId();
         
         await _userService.DeleteUserById(id);
-        return NoContent();
-    }
-    
-    [Authorize]
-    [HttpDelete]
-    public async Task<IActionResult> DeleteUserById()
-    {
-        var userId = GetUserId();
-        await _userService.DeleteUserById(userId);
         return NoContent();
     }
 }

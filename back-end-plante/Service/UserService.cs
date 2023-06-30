@@ -63,6 +63,7 @@ public class UserService : IUserService
 
     public Task UpdateUser(User userRequest)
     {
+        userRequest.Password = Hasher.Hash(userRequest.Password);
         return _userRepository.UpdateUser(userRequest);
     }
 

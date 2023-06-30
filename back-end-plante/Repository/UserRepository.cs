@@ -9,12 +9,18 @@ namespace back_end_plante.Repository;
 public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
 {
     private readonly IMongoCollection<User> _userCollection;
+    private FindOptions<User> _findOptions;
     public UserRepository(IOptions<ConnectionStringConfiguration> connectionStringConfiguration) : base(connectionStringConfiguration)
     {
         try
         {
             var db = GetClient().WithReadPreference(ReadPreference.Secondary).GetDatabase(MongoPocProviderName);
             _userCollection = db.GetCollection<User>("User");
+            
+            _findOptions = new FindOptions<User>
+            {
+                Projection = Builders<User>.Projection.Exclude(user => user.Password)
+            };
         }
         catch (Exception e)
         {
@@ -38,7 +44,8 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
     public async Task<List<User>> GetUsers()
     {
         var filter = Builders<User>.Filter.Empty;
-        var response = await _userCollection.FindAsync(filter);
+
+        var response = await _userCollection.FindAsync(filter, _findOptions);
 
         return response.ToList();
     }
@@ -50,7 +57,8 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
         if (isForAdmin)
             filter &= Builders<User>.Filter.Eq(user => user.IsAdmin, true);
 
-        var response = await _userCollection.FindAsync(filter);
+        
+        var response = await _userCollection.FindAsync(filter, _findOptions);
         
         var user = response.ToList().FirstOrDefault();
         if (user is null) throw new BadHttpRequestException("User not found");
@@ -89,15 +97,10 @@ public class UserRepository : MsprPlanteRepositoryBase, IUserRepository
     public async Task Register(User user)
     {
         var filter = Builders<User>.Filter.Eq(u => u.Mail, user.Mail);
-        var response = await _userCollection.FindAsync(filter);
+        var response = await _userCollection.FindAsync(filter, _findOptions);
         if (response.ToList().Any())
             throw new BadHttpRequestException("User already exist");
         
         await _userCollection.InsertOneAsync(user);
-        // var filter = Builders<User>.Filter.Eq(u => u.Mail, user.Mail);
-        // var update = Builders<User>.Update.SetOnInsert(u => u, user);
-        //    var option = new UpdateOptions { IsUpsert = true };
-
-        // return _userCollection.UpdateOneAsync(filter, update, option);
     }
 }
