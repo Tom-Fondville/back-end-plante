@@ -62,10 +62,15 @@ public class DiscussionRepository : MsprPlanteRepositoryBase, IDiscussionReposit
         return response.FirstOrDefault();
     }
 
+    public async Task CreateDiscution(Discussion discussion)
+    {
+        await _messagingCollection.InsertOneAsync(discussion);
+    }
+
     public async Task SendMessage(SendMessageRequest request, string userId)
     {
         var filter = Builders<Discussion>.Filter.Where(discussion =>
-            discussion.Id.Equals(request.Discussion)    
+            discussion.Id.Equals(request.DiscussionId)    
             && discussion.Id.UserId1 == userId || discussion.Id.UserId2 == userId
         );
         

@@ -5,7 +5,6 @@ namespace back_end_plante.Common.Models.Messaging;
 public class Discussion
 {
     [BsonId]
-    [BsonRepresentation(MongoDB.Bson.BsonType.Document)]
     public DiscussionId Id { get; set; }
     
     [BsonElement("userName")]
@@ -16,4 +15,4 @@ public class Discussion
 
     [BsonElement("messages")]
     public List<Message> Messages { get; set; }
-}
+}   

@@ -4,11 +4,9 @@ namespace back_end_plante.Common.Models.Messaging;
 
 public class DiscussionId
 {
-    [BsonId]
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId1 { get; set; }
     
-    [BsonId]
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId2 { get; set; }
 
