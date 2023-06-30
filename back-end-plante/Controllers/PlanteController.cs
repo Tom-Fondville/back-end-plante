@@ -56,10 +56,11 @@ public class PlanteController : BaseController
     /// <param name="userId"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("user")]
-    public Task<List<Plant>> GetPlantsByUserId()
+    [HttpGet("user/{userId}")]
+    public Task<List<Plant>> GetPlantsByUserId([FromRoute] string userId)
     {
-        var userId = GetUserId();
+        if (!IsAdmin())
+            userId = GetUserId();
         return _planteRepository.GetPlantsByUserId(userId);
     }
     
@@ -99,23 +100,11 @@ public class PlanteController : BaseController
     /// <returns></returns>
     [Authorize]
     [HttpDelete("deletePlant/{id}")]
-    public Task<bool> DeletePlant([FromRoute] string id)
+    public async Task<bool> DeletePlant([FromRoute] string id)
     {
         if (!IsAdmin())
-            throw new UnauthorizedAccessException("you aren't admin");
+            return await _planteRepository.DeletePlant(id, GetUserId());
         
-        return _planteRepository.DeletePlant(id);
-    }
-    
-    /// <summary>
-    /// delete a plant by id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpDelete("deletePlant/{id}/user")]
-    public Task<bool> DeletePlantByUserId([FromRoute] string id)
-    {
-        return _planteRepository.DeletePlant(id, GetUserId());
+        return await _planteRepository.DeletePlant(id);
     }
 }
