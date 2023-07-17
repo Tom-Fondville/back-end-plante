@@ -37,7 +37,7 @@ public class PlanteRepositry : MsprPlanteRepositoryBase, IPlanteRepository
     public async Task<List<Plant>> GetPlantsByIdsAsync(List<string> plantIds)
     {
         var builder = Builders<Plant>.Filter;
-        var filter = builder.In("_id", plantIds);
+        var filter = builder.In(p => p.Id, plantIds);
 
         var result = await _plantCollection.FindAsync(filter);
         return result.ToList();
