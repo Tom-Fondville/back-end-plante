@@ -59,7 +59,6 @@ public class DiscussionController : BaseController
     {
         var userId = GetUserId();
         var response = await _discussionRepository.GetMessagesByDiscution(id, userId);
-    
         return response;
     }
     

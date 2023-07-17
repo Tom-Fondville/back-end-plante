@@ -99,7 +99,7 @@ public class PlanteController : BaseController
     /// <param name="id"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpDelete("deletePlant/{id}")]
+    [HttpDelete("/{id}")]
     public async Task<bool> DeletePlant([FromRoute] string id)
     {
         if (!IsAdmin())
